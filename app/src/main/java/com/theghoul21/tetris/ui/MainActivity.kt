@@ -11,10 +11,9 @@ import com.theghoul21.tetris.ui.blocks.Direction
 import kotlinx.android.synthetic.main.main_layout.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.NonCancellable
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.withTimeout
-import kotlinx.coroutines.experimental.javafx.JavaFx as UI
-
+import kotlin.concurrent.fixedRateTimer
 /**
  * Created by Luca on 31/05/2017.
  *
@@ -52,8 +51,17 @@ class MainActivity : AppCompatActivity(), JobHolder, TetrisActionListener {
         val surfaceView = main;
         ButtonsTouchListener(moveLeftBtn, moveRightBtn, moveDownBtn, main)
 
-        withTimeout(job + UI) {
 
+
+        launch(job + UI) {
+            fixedRateTimer("draw", period = 16L) {
+                main.draw()
+            }
+        }
+        launch(job + UI) {
+            fixedRateTimer("gameUpdate", period = 10) {
+                main.updateGame()
+            }
         }
 
 //        moveLeftBtn.setOnClickListener { surfaceView.movePieceTo(Direction.LEFT) }

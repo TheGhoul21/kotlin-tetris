@@ -111,6 +111,7 @@ class Grid(val width: Int, val height: Int, callback: (g: Grid) -> Unit) {
                 type,
                 availableColors[pieces.size % availableColors.size],
                 rotation))
+        slowDown()
     }
 
     private fun getTopMostBlockFor(x: Int): Int {

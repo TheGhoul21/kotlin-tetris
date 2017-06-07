@@ -2,14 +2,13 @@ package com.theghoul21.tetris.ui.blocks
 
 import android.graphics.Color
 import java.security.SecureRandom
-import java.util.*
 
 /**
  * Created by Luca on 02/06/2017.
  *
  */
 
-class Grid(val width: Int, val height: Int, callback: (g: Grid) -> Unit) {
+class Grid(val width: Int, val height: Int/*, callback: (g: Grid) -> Unit*/) {
     var pieces: List<Piece> = emptyList()
     val random: SecureRandom = SecureRandom()
     var blocks: List<Block> = emptyList()
@@ -35,7 +34,7 @@ class Grid(val width: Int, val height: Int, callback: (g: Grid) -> Unit) {
     val availableColors = listOf(Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.MAGENTA)
 
 
-    private val update: TimerTask.() -> Unit = {
+    fun update() {
 
         if (timeSpent >= 1 / speed * 1000) {
             timeSpent = 0;
@@ -61,11 +60,11 @@ class Grid(val width: Int, val height: Int, callback: (g: Grid) -> Unit) {
             lastUpdate = System.currentTimeMillis()
         }
 
-        callback(this@Grid);
+        //callback(this@Grid);
 
 
     }
-    val timer = kotlin.concurrent.fixedRateTimer("mainTimer", false, 0, 16L, update)
+    // val timer = kotlin.concurrent.fixedRateTimer("mainTimer", false, 0, 16L, update)
 
     private fun addPiece(p: Piece) {
         pieces += p

@@ -132,7 +132,7 @@ class Grid(val width: Int, val height: Int, callback: (g: Grid) -> Unit) {
     }
 
     fun speedUp() {
-        speed = 10.0f;
+        speed = 75.0f;
     }
     fun slowDown() {
         speed = 1.0f;

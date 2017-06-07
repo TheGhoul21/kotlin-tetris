@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+<com.theghoul21.tetris.ui.DrawSurfaceView
+    android:layout_width="match_parent"
+    android:id="@+id/main"
+    android:layout_weight="1"
+    android:layout_height="0dp">
+
+</com.theghoul21.tetris.ui.DrawSurfaceView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="0dp"
+            android:id="@+id/moveLeftBtn"
+            android:layout_weight="1"
+            android:text="LEFT"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_width="0dp"
+            android:id="@+id/moveDownBtn"
+            android:layout_weight="1"
+            android:text="DOWN"
+            android:layout_height="wrap_content" />
+        <Button
+            android:layout_width="0dp"
+            android:id="@+id/moveRightBtn"
+            android:layout_weight="1"
+            android:text="RIGHT"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</LinearLayout>

@@ -40,7 +40,7 @@ class DrawSurfaceView(context: Context?, attributeSet: AttributeSet?) : SurfaceV
 //        holder.unlockCanvasAndPost(canvas)
 
 
-        grid = Grid(Sizes.WIDTH, Sizes.HEIGHT, { g ->
+        grid = Grid(Sizes.WIDTH, Sizes.HEIGHT/*, { g ->
             val canvas = holder.lockCanvas()
 
             if (canvas != null) {
@@ -61,12 +61,37 @@ class DrawSurfaceView(context: Context?, attributeSet: AttributeSet?) : SurfaceV
                 lastPiece?.blocks?.map { drawTile(canvas, it, lastPiece.coordinates.first, lastPiece.coordinates.second) }
                 holder.unlockCanvasAndPost(canvas)
             }
-        })
+        }*/)
 
         setOnClickListener {
             if(!grid.gameOn) {
                 grid.restart();
             }
+        }
+    }
+
+    fun draw() {
+        val canvas = holder.lockCanvas()
+
+        if (canvas != null) {
+
+            //grid.update()
+
+            canvas.drawColor(Color.GRAY)
+            grid.blocks.map { drawTile(canvas, it) }
+
+            val paintText = Paint()
+            paintText.color = Color.WHITE
+            paintText.textSize = 150.0f
+
+            if (!grid.gameOn) {
+                drawCenteredText(canvas, paintText, "Game Over")
+                paintText.textSize = 100.0f
+                drawCenteredText(canvas, paintText, "Tap to Restart", Pair(0, 180))
+            }
+            val lastPiece = if(grid.pieces.isNotEmpty()) grid.pieces.last() else null
+            lastPiece?.blocks?.map { drawTile(canvas, it, lastPiece.coordinates.first, lastPiece.coordinates.second) }
+            holder.unlockCanvasAndPost(canvas)
         }
     }
 
@@ -123,10 +148,8 @@ class DrawSurfaceView(context: Context?, attributeSet: AttributeSet?) : SurfaceV
     fun slowDown() {
         grid.slowDown()
     }
-}
 
-interface DrawCallback {
-    fun draw() {
-
+    fun updateGame() {
+        grid.update()
     }
 }

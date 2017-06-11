@@ -9,12 +9,20 @@ import java.security.SecureRandom
  */
 
 class Grid(val width: Int, val height: Int/*, callback: (g: Grid) -> Unit*/) {
+
+
+
+    companion object {
+        val NORMAL_SPEED = 1.0f;
+        val FAST_SPEED = 75.0f;
+    }
+
     var pieces: List<Piece> = emptyList()
     val random: SecureRandom = SecureRandom()
     var blocks: List<Block> = emptyList()
 
 
-    var speed = 1.0f // tiles per second
+    var speed = NORMAL_SPEED // tiles per second
     var lastUpdate = 0L
     var timeSpent = 0L
     var gameOn = true;
@@ -24,7 +32,7 @@ class Grid(val width: Int, val height: Int/*, callback: (g: Grid) -> Unit*/) {
         blocks = emptyList()
 
 
-        speed = 1.0f // tiles per second
+        speed = NORMAL_SPEED // tiles per second
         lastUpdate = 0L
         timeSpent = 0L
         gameOn = true;
@@ -132,10 +140,10 @@ class Grid(val width: Int, val height: Int/*, callback: (g: Grid) -> Unit*/) {
     }
 
     fun speedUp() {
-        speed = 75.0f;
+        speed = FAST_SPEED;
     }
     fun slowDown() {
-        speed = 1.0f;
+        speed = NORMAL_SPEED;
     }
 
     private fun wouldCollide(): Boolean {
@@ -173,6 +181,6 @@ class Grid(val width: Int, val height: Int/*, callback: (g: Grid) -> Unit*/) {
 }
 
 object Sizes {
-    val WIDTH = 9
-    val HEIGHT = 12
+    const val WIDTH = 9
+    const val HEIGHT = 12
 }

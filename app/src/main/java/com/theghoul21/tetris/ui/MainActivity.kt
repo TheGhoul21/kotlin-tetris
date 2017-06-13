@@ -12,8 +12,9 @@ import kotlinx.android.synthetic.main.main_layout.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.NonCancellable
 import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
-import kotlin.concurrent.fixedRateTimer
+
 /**
  * Created by Luca on 31/05/2017.
  *
@@ -42,6 +43,21 @@ class MainActivity : AppCompatActivity(), JobHolder, TetrisActionListener {
 
     override val job: Job = Job();
 
+    companion object {
+        const val TICKS_PER_SECOND = 60;
+        const val SKIP_TICKS = 1000 / TICKS_PER_SECOND;
+        const val MAX_FRAMESKIP = 5;
+    }
+    var start = 0L
+
+    fun getTickCount():Long{
+        if(start == 0L) {
+            start = System.currentTimeMillis();
+            return 0
+        } else {
+            return System.currentTimeMillis() - start;
+        }
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,16 +69,45 @@ class MainActivity : AppCompatActivity(), JobHolder, TetrisActionListener {
 
 
 
-        launch(job + UI) {
-            fixedRateTimer("draw", period = 16L) {
-                main.draw()
+
+
+
+        var next_game_tick = getTickCount()
+        var loops:Int
+        var interpolation:Float;
+
+        val gameIsRunning = true
+
+        launch(UI+job) {
+            while( gameIsRunning ) {
+
+                loops = 0;
+                while( getTickCount() > next_game_tick && loops < MAX_FRAMESKIP) {
+                    main.updateGame();
+
+                    next_game_tick += SKIP_TICKS;
+                    loops++;
+                }
+
+                interpolation = ( getTickCount() + SKIP_TICKS - next_game_tick ).toFloat() / SKIP_TICKS.toFloat();
+                main.draw( interpolation )
+                delay(SKIP_TICKS.toLong())
             }
         }
-        launch(job + UI) {
-            fixedRateTimer("gameUpdate", period = 10) {
-                main.updateGame()
-            }
-        }
+
+
+
+
+//        launch(job + UI) {
+//            fixedRateTimer("draw", period = 16L) {
+//                main.draw()
+//            }
+//        }
+//        launch(job + UI) {
+//            fixedRateTimer("gameUpdate", period = 10) {
+//                main.updateGame()
+//            }
+//        }
 
 //        moveLeftBtn.setOnClickListener { surfaceView.movePieceTo(Direction.LEFT) }
 //        moveRightBtn.setOnClickListener { surfaceView.movePieceTo(Direction.RIGHT) }

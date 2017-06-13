@@ -70,7 +70,7 @@ class DrawSurfaceView(context: Context?, attributeSet: AttributeSet?) : SurfaceV
         }
     }
 
-    fun draw() {
+    fun draw(interpolation: Float) {
         val canvas = holder.lockCanvas()
 
         if (canvas != null) {

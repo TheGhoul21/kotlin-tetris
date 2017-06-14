@@ -13,14 +13,16 @@ class Grid(val width: Int, val height: Int/*, callback: (g: Grid) -> Unit*/) {
 
 
     companion object {
-        val NORMAL_SPEED = 1.0f;
-        val FAST_SPEED = 75.0f;
+        const val NORMAL_SPEED = 1.0f;
+        const val FAST_SPEED = 75.0f;
+        const val BASE_SCORE_PER_LINE = 100.0f
+        const val LINE_MULTIPLIER = 0.1f;
     }
 
     var pieces: List<Piece> = emptyList()
     val random: SecureRandom = SecureRandom()
-    var blocks: List<Block> = emptyList()
-
+    var blocks: List<Block> = mutableListOf()
+    var score = 0.0;
 
     var speed = NORMAL_SPEED // tiles per second
     var lastUpdate = 0L
@@ -48,6 +50,7 @@ class Grid(val width: Int, val height: Int/*, callback: (g: Grid) -> Unit*/) {
             timeSpent = 0;
             if (gameOn) {
 
+
                 if (pieces.isEmpty()) {
                     generateNewPiece()
                 } else {
@@ -58,6 +61,7 @@ class Grid(val width: Int, val height: Int/*, callback: (g: Grid) -> Unit*/) {
                             gameOn = false
                         } else {
                             addBlocksToStack(pieces.last())
+                            checkFilledLine()
                             generateNewPiece()
                         }
                     }
@@ -112,8 +116,10 @@ class Grid(val width: Int, val height: Int/*, callback: (g: Grid) -> Unit*/) {
 
 
     private fun generateNewPiece() {
-        val type = Type.values()[random.nextInt(Type.values().size)]
-        val rotation = Rotation.values()[random.nextInt(Rotation.values().size)]
+        // val type = Type.values()[random.nextInt(Type.values().size)]
+        val type = Type.O;
+        val rotation = Rotation.x0
+        //val rotation = Rotation.values()[random.nextInt(Rotation.values().size)]
         addPiece(Piece(
                 type,
                 availableColors[pieces.size % availableColors.size],
@@ -177,10 +183,32 @@ class Grid(val width: Int, val height: Int/*, callback: (g: Grid) -> Unit*/) {
         return (0..width - 1).any { getTopMostBlockFor(it) == 1 }
     }
 
+    private fun checkFilledLine(): Boolean {
+
+        val rows = blocks.groupBy { it.y }.entries.filter { it.value.count() == width }
+
+        var index = 0;
+
+
+        rows.map {
+            score += BASE_SCORE_PER_LINE * (Math.pow((1+ LINE_MULTIPLIER).toDouble(), index.toDouble()));
+            //println("row number ${it.key} is full, add score: ${s}; new score: ${score}")
+            // remove row k:
+            // this is really ugly, do some animation, for God's sake...
+            it.value.map { blocks -= it; }
+            index++
+        }
+
+        return rows.isNotEmpty()
+
+
+        // return false
+    }
+
 
 }
 
 object Sizes {
-    const val WIDTH = 9
-    const val HEIGHT = 12
+    const val WIDTH = 8
+    const val HEIGHT = 11
 }

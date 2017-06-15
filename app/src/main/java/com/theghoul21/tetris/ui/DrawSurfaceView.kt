@@ -89,10 +89,24 @@ class DrawSurfaceView(context: Context?, attributeSet: AttributeSet?) : SurfaceV
                 paintText.textSize = 100.0f
                 drawCenteredText(canvas, paintText, "Tap to Restart", Pair(0, 180))
             }
+
+            drawScore(canvas, paintText)
             val lastPiece = if(grid.pieces.isNotEmpty()) grid.pieces.last() else null
             lastPiece?.blocks?.map { drawTile(canvas, it, lastPiece.coordinates.first, lastPiece.coordinates.second) }
             holder.unlockCanvasAndPost(canvas)
         }
+    }
+
+    fun drawScore(canvas: Canvas, paint:Paint) {
+        val text = Math.round(grid.score).toString()
+        val r = Rect();
+        canvas.getClipBounds(r)
+        val cWidth = r.width()
+        paint.textAlign = Paint.Align.LEFT
+        paint.getTextBounds(text, 0, text.length, r)
+        val x = (cWidth - r.width()).toFloat() * 0.9f
+        val y = (r.height() *1.2).toFloat()
+        canvas.drawText(text, x , y, paint)
     }
 
 

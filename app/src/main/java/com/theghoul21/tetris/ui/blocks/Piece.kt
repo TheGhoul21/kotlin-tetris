@@ -47,7 +47,20 @@ data class Piece(val type: Type, val color: Int, val rotation: Rotation) {
         coordinates = Pair(Math.floor((Sizes.WIDTH - size.second) / 2.0).toInt(), 0)
     }
 
-    val blocks: MutableList<Block> by BlocksGeneratorDelegate()
+    val blocks: MutableList<Block> by lazy {
+        when (piece.type) {
+            // TODO change this values for correct centering
+            Type.I -> mutableListOf(Block(0, 1, piece.color), Block(1, 1, piece.color), Block(2, 1, piece.color), Block(3, 1, piece.color));
+            Type.O -> mutableListOf(Block(0, 1, piece.color), Block(1, 0, piece.color), Block(1, 1, piece.color), Block(0, 0, piece.color));
+            Type.T -> mutableListOf(Block(0, 2, piece.color), Block(1, 1, piece.color), Block(1, 2, piece.color), Block(2, 2, piece.color));
+            Type.S -> mutableListOf(Block(0, 2, piece.color), Block(1, 1, piece.color), Block(1, 2, piece.color), Block(2, 1, piece.color));
+            Type.Z -> mutableListOf(Block(0, 1, piece.color), Block(1, 1, piece.color), Block(1, 2, piece.color), Block(2, 2, piece.color));
+
+
+            Type.J -> mutableListOf(Block(0, 1, piece.color), Block(0, 2, piece.color), Block(1, 2, piece.color), Block(2, 2, piece.color));
+            Type.L -> mutableListOf(Block(0, 2, piece.color), Block(1, 2, piece.color), Block(2, 2, piece.color), Block(2, 1, piece.color));
+        }
+    }
 
     fun moveDown() {
         this.coordinates = Pair(coordinates.first, coordinates.second + 1)
@@ -73,22 +86,3 @@ data class Piece(val type: Type, val color: Int, val rotation: Rotation) {
 
 
 }
-
-class BlocksGeneratorDelegate {
-    operator fun getValue(piece: Piece, property: KProperty<*>): MutableList<Block> {
-
-        return when (piece.type) {
-            Type.I -> mutableListOf(Block(0, 1, piece.color), Block(1, 1, piece.color), Block(2, 1, piece.color), Block(3, 1, piece.color));
-            Type.O -> mutableListOf(Block(0, 1, piece.color), Block(1, 0, piece.color), Block(1, 1, piece.color), Block(0, 0, piece.color));
-            Type.T -> mutableListOf(Block(0, 1, piece.color), Block(1, 0, piece.color), Block(1, 1, piece.color), Block(2, 1, piece.color));
-            Type.S -> mutableListOf(Block(0, 1, piece.color), Block(1, 0, piece.color), Block(1, 1, piece.color), Block(2, 0, piece.color));
-            Type.Z -> mutableListOf(Block(0, 0, piece.color), Block(1, 0, piece.color), Block(1, 1, piece.color), Block(2, 1, piece.color));
-
-
-            Type.J -> mutableListOf(Block(0, 0, piece.color), Block(0, 1, piece.color), Block(1, 1, piece.color), Block(2, 1, piece.color));
-            Type.L -> mutableListOf(Block(0, 1, piece.color), Block(1, 1, piece.color), Block(2, 1, piece.color), Block(2, 0, piece.color));
-        }
-    }
-}
-
-
